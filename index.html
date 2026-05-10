@@ -11,80 +11,82 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 </head>
+
 <body>
 
 <!-- HOME -->
 <div id="home" class="screen active">
   <div class="overlay">
-    <h1>💄 JoH Cosmetics</h1>
+    <h1>JoH Cosmetics💄</h1>
     <p>Premium Skincare & Makeup</p>
-    <button onclick="showProducts()">Anza Ununuzi</button>
-    <button onclick="goAdminLogin()">Admin</button>
+    <button onclick="showProducts()">VIEW</button>
   </div>
-
-  <!-- stickers -->
-  <div class="sticker s1">💄</div>
-  <div class="sticker s2">✨</div>
-  <div class="sticker s3">💋</div>
-  <div class="sticker s4">🌸</div>
-
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="screen">
 
-<h2>Bidhaa 💖</h2>
-
-<!-- CART SUMMARY -->
-<div class="cartSummary">
-🛒 Kikapu: <span id="cartCount">0</span> bidhaa | 
-💰 Jumla: <span id="cartTotal">0</span> TSh
+<!-- CART BADGE -->
+<div id="cartBadge" onclick="openCheckout()">
+🛒 <span id="cartCount">0</span>
 </div>
+
+<h2>Bidhaa 💖</h2>
 
 <div id="productList"></div>
 
 </div>
 
-<!-- CART PAGE -->
-<div id="cart" class="screen">
-
-<h2>🛒 Kikapu</h2>
-<div id="cartList"></div>
-
-<input id="cName" placeholder="Jina lako">
-<input id="cLocation" placeholder="Mahali">
-
-<button onclick="checkout()">Maliza Oda WhatsApp</button>
-
-</div>
-
+<!-- CART (HIDDEN PAGE OPTIONAL) -->
+<div id="cart" class="screen"></div>
 <!-- ADMIN LOGIN -->
 <div id="adminLogin" class="screen">
-<h2>Admin Login</h2>
-<input id="adminPass" type="password" placeholder="Password">
-<button onclick="loginAdmin()">Login</button>
+  <h2>Admin Login</h2>
+  <input id="adminPass" type="password" placeholder="Password">
+  <button onclick="loginAdmin()">Login</button>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="screen">
+  <h2>Welcome Faridi</h2>
 
-<h2>Admin Panel 💄</h2>
+  <input type="hidden" id="editId">
 
-<input type="hidden" id="editId">
+  <input id="name" placeholder="Jina la bidhaa">
+  <input id="price" placeholder="Bei">
+  <input id="image" placeholder="Image URL">
 
-<input id="name" placeholder="Jina la bidhaa">
-<input id="price" placeholder="Bei">
-<input id="image" placeholder="Image URL">
+  <button onclick="saveProduct()">Hifadhi</button>
+</div>
 
-<button onclick="saveProduct()">Hifadhi Bidhaa</button>
+</div>
+
+<!-- 🔥 CHECKOUT BOTTOM SHEET -->
+<div id="checkoutSheet" class="checkout-sheet">
+
+  <div class="sheet-header">
+    <h3>🛒 Oda Yako</h3>
+    <button onclick="closeCheckout()">✖</button>
+  </div>
+
+  <div id="checkoutList"></div>
+
+  <div class="sheet-footer">
+
+    <h3>Total: Tsh <span id="checkoutTotal">0</span></h3>
+
+    <input id="cName" placeholder="Jina lako">
+    <input id="cLocation" placeholder="Mahali">
+
+    <button onclick="checkout()">Tuma Oda WhatsApp</button>
+
+  </div>
 
 </div>
 
 <!-- NAV -->
 <div class="navbar">
 <button onclick="showHome()">Home</button>
-<button onclick="showProducts()">Bidhaa</button>
-<button onclick="showCart()">Kikapu</button>
 <button onclick="goAdminLogin()">Admin</button>
 </div>
 
