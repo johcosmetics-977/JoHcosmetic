@@ -14,82 +14,172 @@
 
 <body>
 
-<!-- HOME -->
+<!-- ================= HOME ================= -->
+
 <div id="home" class="screen active">
+
   <div class="overlay">
-    <h1>JoH Cosmetics💄</h1>
+
+    <h1>JoH Cosmetics 💄</h1>
+
     <p>Premium Skincare & Makeup</p>
-    <button onclick="showProducts()">VIEW</button>
+
+    <button onclick="showProducts()">
+      VIEW PRODUCTS
+    </button>
+
   </div>
+
 </div>
 
-<!-- PRODUCTS -->
+<!-- ================= PRODUCTS ================= -->
+
 <div id="products" class="screen">
 
-<!-- CART BADGE -->
-<div id="cartBadge" onclick="openCheckout()">
-🛒 <span id="cartCount">0</span>
+  <h2 class="title">
+    Bidhaa Zetu 💖
+  </h2>
+
+  <!-- 🔍 SEARCH BAR (ADDED) -->
+  <input
+    id="searchInput"
+    type="text"
+    placeholder="🔍 Tafuta bidhaa..."
+    onkeyup="searchProducts()"
+    class="searchBox"
+  >
+
+  <!-- FLOATING CART -->
+  <div id="cartBadge" onclick="openCheckout()">
+
+    🛒
+
+    <span id="cartCount">0</span>
+
+  </div>
+
+  <!-- PRODUCTS LIST -->
+  <div id="productList"></div>
+
 </div>
 
-<h2>Bidhaa 💖</h2>
+<!-- ================= CHECKOUT SHEET ================= -->
 
-<div id="productList"></div>
+<div id="checkoutSheet" class="checkout-sheet">
+
+  <!-- HEADER -->
+  <div class="sheet-header">
+
+    <h3>🛒 Oda Yako</h3>
+
+    <button class="closeBtn" onclick="closeCheckout()">
+      ✖
+    </button>
+
+  </div>
+
+  <!-- ORDER ITEMS -->
+  <div id="checkoutList"></div>
+
+  <!-- FOOTER -->
+  <div class="sheet-footer">
+
+    <h3>
+      Total:
+      Tsh <span id="checkoutTotal">0</span>
+    </h3>
+
+    <input
+      id="cName"
+      type="text"
+      placeholder="Jina lako"
+    >
+
+    <input
+      id="cLocation"
+      type="text"
+      placeholder="Mahali ulipo"
+    >
+
+    <button onclick="checkout()">
+      Tuma Oda WhatsApp
+    </button>
+
+  </div>
 
 </div>
 
-<!-- CART (HIDDEN PAGE OPTIONAL) -->
-<div id="cart" class="screen"></div>
-<!-- ADMIN LOGIN -->
+<!-- ================= ADMIN LOGIN ================= -->
+
 <div id="adminLogin" class="screen">
-  <h2>Admin Login</h2>
-  <input id="adminPass" type="password" placeholder="Password">
-  <button onclick="loginAdmin()">Login</button>
+
+  <h2>Admin Login 🔐</h2>
+
+  <input
+    id="adminPass"
+    type="password"
+    placeholder="Password"
+  >
+
+  <button onclick="loginAdmin()">
+    Login
+  </button>
+
 </div>
 
-<!-- ADMIN -->
+<!-- ================= ADMIN PANEL ================= -->
+
 <div id="admin" class="screen">
-  <h2>Welcome Faridi</h2>
+
+  <h2>Welcome Faridi 👑</h2>
 
   <input type="hidden" id="editId">
 
-  <input id="name" placeholder="Jina la bidhaa">
-  <input id="price" placeholder="Bei">
-  <input id="image" placeholder="Image URL">
+  <input
+    id="name"
+    type="text"
+    placeholder="Jina la bidhaa"
+  >
 
-  <button onclick="saveProduct()">Hifadhi</button>
-</div>
+  <input
+    id="price"
+    type="number"
+    placeholder="Bei"
+  >
 
-</div>
+  <input
+    id="image"
+    type="text"
+    placeholder="Image URL"
+  >
 
-<!-- 🔥 CHECKOUT BOTTOM SHEET -->
-<div id="checkoutSheet" class="checkout-sheet">
-
-  <div class="sheet-header">
-    <h3>🛒 Oda Yako</h3>
-    <button onclick="closeCheckout()">✖</button>
-  </div>
-
-  <div id="checkoutList"></div>
-
-  <div class="sheet-footer">
-
-    <h3>Total: Tsh <span id="checkoutTotal">0</span></h3>
-
-    <input id="cName" placeholder="Jina lako">
-    <input id="cLocation" placeholder="Mahali">
-
-    <button onclick="checkout()">Tuma Oda WhatsApp</button>
-
-  </div>
+  <button onclick="saveProduct()">
+    Hifadhi Bidhaa
+  </button>
 
 </div>
 
-<!-- NAV -->
+<!-- ================= NAVBAR ================= -->
+
 <div class="navbar">
-<button onclick="showHome()">Home</button>
-<button onclick="goAdminLogin()">Admin</button>
+
+  <button onclick="showHome()">
+    Home
+  </button>
+
+  <button onclick="showProducts()">
+    Products
+  </button>
+
+  <button onclick="goAdminLogin()">
+    Admin
+  </button>
+
 </div>
+
+<!-- ================= SCRIPT ================= -->
 
 <script src="script.js"></script>
+
 </body>
 </html>
