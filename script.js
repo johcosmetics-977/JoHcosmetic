@@ -241,22 +241,28 @@ function checkout(){
 
   let total = 0;
 
-  let msg = "💄 ODA YA JoH Cosmetics %0A%0A";
+  let msg = "";
 
-  cart.forEach(c=>{
-    let subtotal = Number(c.price) * c.qty;
-    total += subtotal;
-    msg += `🛍 ${c.name} x${c.qty} = Tsh ${subtotal}%0A`;
-  });
+msg += "CUSTOMER ORDER\n";
+msg += "--------------------------\n\n";
 
-  msg += `%0A💰 Total: Tsh ${total}`;
-  msg += `%0A%0A👤 Jina: ${name}`;
-  msg += `%0A📍 Mahali: ${location}`;
+cart.forEach(c=>{
+  let subtotal = Number(c.price) * c.qty;
+  total += subtotal;
 
-  window.open(
-    `https://wa.me/255677544659?text=${msg}`,
-    "_blank"
-  );
+  msg += c.name + " x" + c.qty + " = Tsh " + subtotal + "\n";
+});
+
+msg += "\n--------------------------\n";
+msg += "TOTAL: Tsh " + total + "\n\n";
+
+msg += "CUSTOMER DETAILS\n";
+msg += "Name: " + name + "\n";
+msg += "Location: " + location + "\n";
+
+let url = "https://wa.me/255677544659?text=" + encodeURIComponent(msg);
+
+window.open(url, "_blank");
 
 }
 
