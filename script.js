@@ -1,141 +1,223 @@
-body{
-margin:0;
-font-family:Arial;
-background:#fff;
+/* ================= FIREBASE ================= */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB1zct7CzQ60_dTHZSDEbWok_OsYIneG0g",
+  authDomain: "johbeauty.firebaseapp.com",
+  projectId: "johbeauty",
+  storageBucket: "johbeauty.firebasestorage.app",
+  messagingSenderId: "1050478968505",
+  appId: "1:1050478968505:web:34cd7a166a65771bc8e568"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* ================= STATE ================= */
+
+let products = [];
+let cart = [];
+let isAdmin = false;
+
+const ADMIN_PASSWORD = "Faridi@123";
+
+/* ================= LOAD PRODUCTS ================= */
+
+function loadProducts(){
+
+  db.collection("products").onSnapshot(snapshot=>{
+
+    products = [];
+
+    snapshot.forEach(doc=>{
+      products.push({id:doc.id,...doc.data()});
+    });
+
+    renderProducts();
+
+  });
+
 }
 
-.screen{
-display:none;
-padding:20px;
-min-height:100vh;
+/* ================= RENDER PRODUCTS ================= */
+
+function renderProducts(){
+
+  let box = document.getElementById("productList");
+  if(!box) return;
+
+  box.innerHTML = "";
+
+  products.forEach(p=>{
+
+    box.innerHTML += `
+      <div class="card">
+        <img src="${p.image}">
+        <h3>${p.name}</h3>
+        <p>Tsh ${p.price}</p>
+
+        <button onclick="addToCart('${p.id}')">🛒 Ongeza</button>
+
+        ${isAdmin ? `
+          <button onclick="editProduct('${p.id}')">✏ Edit</button>
+          <button onclick="deleteProduct('${p.id}')">🗑 Delete</button>
+        ` : ""}
+
+      </div>
+    `;
+  });
+
 }
 
-.active{display:block;}
+/* ================= CART ================= */
 
-/* HOME */
-#home{
-background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.6)),
-url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80");
-background-size:cover;
-background-position:center;
-color:white;
-position:relative;
+function addToCart(id){
+
+  let item = products.find(p=>p.id===id);
+
+  let exist = cart.find(c=>c.id===id);
+
+  if(exist){
+    exist.qty++;
+  }else{
+    cart.push({...item,qty:1});
+  }
+
+  updateCart();
+
 }
 
-.overlay{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
+/* ================= UPDATE CART ================= */
+
+function updateCart(){
+
+  let count = 0;
+
+  cart.forEach(c=>{
+    count += c.qty;
+  });
+
+  document.getElementById("cartCount").innerText = count;
+
 }
 
-/* BUTTON */
-button{
-padding:12px 18px;
-border:none;
-border-radius:20px;
-background:#ff5e99;
-color:white;
-margin:5px;
-cursor:pointer;
+/* ================= ADMIN LOGIN ================= */
+
+function loginAdmin(){
+
+  let pass = document.getElementById("adminPass").value.trim();
+
+  if(pass === ADMIN_PASSWORD){
+
+    isAdmin = true;
+
+    showToast("✅ Admin umeingia");
+
+    changeScreen("admin");
+
+    renderProducts();
+
+  }else{
+
+    alert("Password sio sahihi ❌");
+
+  }
+
 }
 
-/* PRODUCTS */
-#productList{
-padding-bottom:120px;
+/* ================= ADD / UPDATE PRODUCT ================= */
+
+function saveProduct(){
+
+  let id = document.getElementById("editId").value;
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+  let image = document.getElementById("image").value;
+
+  let data = {name,price,image};
+
+  if(id){
+
+    db.collection("products").doc(id).update(data);
+    showToast("✏ Product updated");
+
+  }else{
+
+    db.collection("products").add(data);
+    showToast("➕ Product added");
+
+  }
+
 }
 
-.card{
-background:white;
-padding:15px;
-margin:10px 0;
-border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+/* ================= EDIT ================= */
+
+function editProduct(id){
+
+  let p = products.find(x=>x.id===id);
+
+  document.getElementById("editId").value = p.id;
+  document.getElementById("name").value = p.name;
+  document.getElementById("price").value = p.price;
+  document.getElementById("image").value = p.image;
+
+  changeScreen("admin");
+
 }
 
-.card img{
-width:100%;
-border-radius:10px;
+/* ================= DELETE ================= */
+
+function deleteProduct(id){
+
+  if(!isAdmin) return;
+
+  db.collection("products").doc(id).delete();
+
+  showToast("🗑 Deleted");
+
 }
 
-/* NAV */
-.navbar{
-position:fixed;
-bottom:0;
-width:100%;
-display:flex;
-justify-content:space-around;
-background:white;
-padding:10px;
-box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+/* ================= SCREEN ================= */
+
+function changeScreen(id){
+
+  document.querySelectorAll(".screen")
+  .forEach(s=>s.classList.remove("active"));
+
+  document.getElementById(id).classList.add("active");
+
 }
 
-/* 🔥 CART BADGE */
-#cartBadge{
-position:fixed;
-top:15px;
-right:15px;
-background:#ff5e99;
-color:white;
-width:45px;
-height:45px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-z-index:9999;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
-cursor:pointer;
+/* ================= NAV ================= */
+
+function showHome(){changeScreen("home")}
+function showProducts(){loadProducts();changeScreen("products")}
+function showCart(){changeScreen("cart")}
+function goAdminLogin(){changeScreen("adminLogin")}
+
+/* ================= TOAST ================= */
+
+function showToast(text){
+
+  let t = document.createElement("div");
+
+  t.innerText = text;
+
+  t.style.position="fixed";
+  t.style.bottom="90px";
+  t.style.left="50%";
+  t.style.transform="translateX(-50%)";
+  t.style.background="#ff5e99";
+  t.style.color="white";
+  t.style.padding="10px 15px";
+  t.style.borderRadius="20px";
+  t.style.zIndex="999999";
+
+  document.body.appendChild(t);
+
+  setTimeout(()=>t.remove(),2000);
+
 }
 
-/* 🔥 CHECKOUT SHEET */
-.checkout-sheet{
-position:fixed;
-bottom:-100%;
-left:0;
-width:100%;
-height:70%;
-background:white;
-border-radius:20px 20px 0 0;
-box-shadow:0 -5px 20px rgba(0,0,0,0.2);
-transition:0.3s;
-z-index:99999;
-display:flex;
-flex-direction:column;
-}
+/* ================= INIT ================= */
 
-.checkout-sheet.active{
-bottom:0;
-}
-
-/* HEADER */
-.sheet-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px;
-border-bottom:1px solid #eee;
-}
-
-/* LIST */
-#checkoutList{
-flex:1;
-overflow-y:auto;
-padding:10px;
-}
-
-/* FOOTER */
-.sheet-footer{
-padding:10px;
-border-top:1px solid #eee;
-}
-
-.sheet-footer input{
-width:100%;
-padding:10px;
-margin:5px 0;
-border-radius:10px;
-border:1px solid #ddd;
-}
+loadProducts();
