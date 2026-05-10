@@ -1,494 +1,141 @@
-/* ================= FIREBASE CONFIG ================= */
-/* WEWE PASTE CONFIG YAKO HAPA */
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB1zct7CzQ60_dTHZSDEbWok_OsYIneG0g",
-  authDomain: "johbeauty.firebaseapp.com",
-  projectId: "johbeauty",
-  storageBucket: "johbeauty.firebasestorage.app",
-  messagingSenderId: "1050478968505",
-  appId: "1:1050478968505:web:34cd7a166a65771bc8e568"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-/* ================= STATE ================= */
-
-let products = [];
-let cart = [];
-let isAdmin = false;
-
-/* ================= SCREEN HISTORY ================= */
-
-let screenHistory = ["home"];
-
-/* ================= LOAD PRODUCTS ================= */
-
-function loadProducts() {
-
-  db.collection("products").onSnapshot(snapshot => {
-
-    products = [];
-
-    snapshot.forEach(doc => {
-
-      products.push({
-        id: doc.id,
-        ...doc.data()
-      });
-
-    });
-
-    renderProducts();
-
-  });
-
+body{
+margin:0;
+font-family:Arial;
+background:#fff;
 }
 
-/* ================= RENDER PRODUCTS ================= */
-
-function renderProducts() {
-
-  let box = document.getElementById("productList");
-
-  box.innerHTML = "";
-
-  products.forEach(p => {
-
-    box.innerHTML += `
-
-    <div class="card">
-
-    <img src="${p.image}" style="width:100%;border-radius:12px;">
-
-    <h3>${p.name}</h3>
-
-    <p>Tsh ${p.price}</p>
-
-    ${
-    isAdmin
-    ?
-    `
-    <button onclick="editProduct('${p.id}','${p.name}','${p.price}','${p.image}')">
-    Edit
-    </button>
-
-    <button onclick="deleteProduct('${p.id}')">
-    Delete
-    </button>
-    `:
-    `
-    <button onclick="addToCart('${p.id}')">
-    Ongeza Kikapuni 🛒
-    </button>
-    `
-    }
-
-    </div>
-
-    `;
-
-  });
-
+.screen{
+display:none;
+padding:20px;
+min-height:100vh;
 }
 
-/* ================= ADD TO CART ================= */
+.active{display:block;}
 
-function addToCart(id) {
-
-  let item = products.find(p => p.id === id);
-
-  let exist = cart.find(c => c.id === id);
-
-  if (exist) {
-
-    exist.qty += 1;
-
-  } else {
-
-    cart.push({
-      ...item,
-      qty: 1
-    });
-
-  }
-
-  updateCartSummary();
-
-  renderCart();
-
-  showToast("✔️ Bidhaa imeongezwa kwenye Kikapu 🛒");
-
+/* HOME */
+#home{
+background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.6)),
+url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80");
+background-size:cover;
+background-position:center;
+color:white;
+position:relative;
 }
 
-/* ================= DECREASE QTY ================= */
-
-function decreaseQty(id) {
-
-  let item = cart.find(c => c.id === id);
-
-  if (!item) return;
-
-  item.qty -= 1;
-
-  if (item.qty <= 0) {
-
-    cart = cart.filter(c => c.id !== id);
-
-  }
-
-  updateCartSummary();
-
-  renderCart();
-
+.overlay{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
 }
 
-/* ================= UPDATE SUMMARY ================= */
-
-function updateCartSummary() {
-
-  let count = 0;
-  let total = 0;
-
-  cart.forEach(i => {
-
-    count += i.qty;
-
-    total += Number(i.price) * i.qty;
-
-  });
-
-  document.getElementById("cartCount").innerText = count;
-
-  document.getElementById("cartTotal").innerText = total;
-
+/* BUTTON */
+button{
+padding:12px 18px;
+border:none;
+border-radius:20px;
+background:#ff5e99;
+color:white;
+margin:5px;
+cursor:pointer;
 }
 
-/* ================= SHOW CART ================= */
-
-function showCart() {
-
-  renderCart();
-
-  changeScreen("cart");
-
+/* PRODUCTS */
+#productList{
+padding-bottom:120px;
 }
 
-/* ================= RENDER CART ================= */
-
-function renderCart() {
-
-  let box = document.getElementById("cartList");
-
-  box.innerHTML = "";
-
-  if (cart.length === 0) {
-
-    box.innerHTML = `
-    <p>Kikapu hakina bidhaa 🛒</p>
-    `;
-
-    return;
-
-  }
-
-  cart.forEach(c => {
-
-    box.innerHTML += `
-
-    <div class="card">
-
-    <h3>${c.name}</h3>
-
-    <p>
-    Tsh ${c.price}
-    </p>
-
-    <div style="display:flex;gap:10px;align-items:center;">
-
-    <button onclick="decreaseQty('${c.id}')">
-    ➖
-    </button>
-
-    <span>
-    ${c.qty}
-    </span>
-
-    <button onclick="addToCart('${c.id}')">
-    ➕
-    </button>
-
-    </div>
-
-    </div>
-
-    `;
-
-  });
-
+.card{
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* ================= CHECKOUT ================= */
-
-function checkout() {
-
-  if (cart.length === 0) {
-
-    alert("Kikapu hakina bidhaa");
-
-    return;
-
-  }
-
-  let name = document.getElementById("cName").value;
-
-  let loc = document.getElementById("cLocation").value;
-
-  let total = 0;
-
-  let msg = "💄 ODA YA JoH Cosmetics %0A%0A";
-
-  cart.forEach(c => {
-
-    let subtotal = c.price * c.qty;
-
-    total += subtotal;
-
-    msg += `🛍 ${c.name} x${c.qty} = Tsh ${subtotal}%0A`;
-
-  });
-
-  msg += `%0A💰 Jumla: Tsh ${total}`;
-
-  msg += `%0A%0A👤 Jina: ${name}`;
-
-  msg += `%0A📍 Mahali: ${loc}`;
-
-  window.open(
-    `https://wa.me/255677544659?text=${msg}`,
-    "_blank"
-  );
-
+.card img{
+width:100%;
+border-radius:10px;
 }
 
-/* ================= ADMIN LOGIN ================= */
-
-function loginAdmin() {
-
-  let pass = document.getElementById("adminPass").value;
-
-  if (pass === "Faridi@123") {
-
-    isAdmin = true;
-
-    changeScreen("admin");
-
-    showToast("✅ Admin umeingia");
-
-  } else {
-
-    alert("Password sio sahihi ❌");
-
-  }
-
+/* NAV */
+.navbar{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+justify-content:space-around;
+background:white;
+padding:10px;
+box-shadow:0 -2px 10px rgba(0,0,0,0.1);
 }
 
-/* ================= SAVE PRODUCT ================= */
-
-function saveProduct() {
-
-  let id = document.getElementById("editId").value;
-
-  let n = document.getElementById("name").value;
-
-  let p = document.getElementById("price").value;
-
-  let img = document.getElementById("image").value;
-
-  if (id) {
-
-    db.collection("products")
-    .doc(id)
-    .update({
-      name: n,
-      price: p,
-      image: img
-    });
-
-  } else {
-
-    db.collection("products")
-    .add({
-      name: n,
-      price: p,
-      image: img
-    });
-
-  }
-
-  showToast("💄 Bidhaa imesaveka");
-
+/* 🔥 CART BADGE */
+#cartBadge{
+position:fixed;
+top:15px;
+right:15px;
+background:#ff5e99;
+color:white;
+width:45px;
+height:45px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+z-index:9999;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+cursor:pointer;
 }
 
-/* ================= EDIT PRODUCT ================= */
-
-function editProduct(id, name, price, image) {
-
-  document.getElementById("editId").value = id;
-
-  document.getElementById("name").value = name;
-
-  document.getElementById("price").value = price;
-
-  document.getElementById("image").value = image;
-
-  changeScreen("admin");
-
+/* 🔥 CHECKOUT SHEET */
+.checkout-sheet{
+position:fixed;
+bottom:-100%;
+left:0;
+width:100%;
+height:70%;
+background:white;
+border-radius:20px 20px 0 0;
+box-shadow:0 -5px 20px rgba(0,0,0,0.2);
+transition:0.3s;
+z-index:99999;
+display:flex;
+flex-direction:column;
 }
 
-/* ================= DELETE PRODUCT ================= */
-
-function deleteProduct(id) {
-
-  db.collection("products")
-  .doc(id)
-  .delete();
-
-  showToast("🗑 Bidhaa imefutwa");
-
+.checkout-sheet.active{
+bottom:0;
 }
 
-/* ================= NAVIGATION ================= */
-
-function showHome() {
-
-  changeScreen("home");
-
+/* HEADER */
+.sheet-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+border-bottom:1px solid #eee;
 }
 
-function showProducts() {
-
-  loadProducts();
-
-  changeScreen("products");
-
+/* LIST */
+#checkoutList{
+flex:1;
+overflow-y:auto;
+padding:10px;
 }
 
-function goAdminLogin() {
-
-  changeScreen("adminLogin");
-
+/* FOOTER */
+.sheet-footer{
+padding:10px;
+border-top:1px solid #eee;
 }
 
-/* ================= CHANGE SCREEN ================= */
-
-function changeScreen(id) {
-
-  document.querySelectorAll(".screen")
-  .forEach(s => s.classList.remove("active"));
-
-  document.getElementById(id)
-  .classList.add("active");
-
-  /* save history */
-  if (screenHistory[screenHistory.length - 1] !== id) {
-
-    screenHistory.push(id);
-
-  }
-
+.sheet-footer input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+border:1px solid #ddd;
 }
-
-/* ================= TOAST ================= */
-
-function showToast(text) {
-
-  let msg = document.createElement("div");
-
-  msg.innerText = text;
-
-  msg.style.position = "fixed";
-  msg.style.bottom = "90px";
-  msg.style.left = "50%";
-  msg.style.transform = "translateX(-50%)";
-  msg.style.background = "#ff5e99";
-  msg.style.color = "white";
-  msg.style.padding = "12px 18px";
-  msg.style.borderRadius = "20px";
-  msg.style.zIndex = "999999";
-  msg.style.fontSize = "14px";
-
-  document.body.appendChild(msg);
-
-  setTimeout(()=> {
-    msg.remove();
-  }, 2000);
-
-}
-
-/* ================= DOUBLE SWIPE BACK FIX ================= */
-
-/* prevent normal browser back */
-history.pushState(null, null, location.href);
-
-let backCount = 0;
-
-let backTimer;
-
-window.addEventListener("popstate", function() {
-
-  history.pushState(null, null, location.href);
-
-  backCount++;
-
-  clearTimeout(backTimer);
-
-  backTimer = setTimeout(()=> {
-    backCount = 0;
-  }, 1000);
-
-  /* first swipe */
-  if (backCount === 1) {
-
-    showToast("⬅️ Swipe tena haraka");
-
-    return;
-
-  }
-
-  /* second swipe */
-  if (backCount >= 2) {
-
-    backCount = 0;
-
-    /* if not home */
-    if (screenHistory.length > 1) {
-
-      screenHistory.pop();
-
-      let previous =
-      screenHistory[screenHistory.length - 1];
-
-      document.querySelectorAll(".screen")
-      .forEach(s => s.classList.remove("active"));
-
-      document.getElementById(previous)
-      .classList.add("active");
-
-      showToast("🏠 Umerudi nyuma");
-
-    }
-
-    /* already home */
-    else {
-
-      showToast("👋 Umetoka JoH Cosmetics");
-
-      window.history.go(-2);
-
-    }
-
-  }
-
-});
