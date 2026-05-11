@@ -1,12 +1,12 @@
 /* ================= FIREBASE ================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB1zct7CzQ60_dTHZSDEbWok_OsYIneG0g",
-  authDomain: "johbeauty.firebaseapp.com",
-  projectId: "johbeauty",
-  storageBucket: "johbeauty.firebasestorage.app",
-  messagingSenderId: "1050478968505",
-  appId: "1:1050478968505:web:34cd7a166a65771bc8e568"
+apiKey: "AIzaSyB1zct7CzQ60_dTHZSDEbWok_OsYIneG0g",
+authDomain: "johbeauty.firebaseapp.com",
+projectId: "johbeauty",
+storageBucket: "johbeauty.firebasestorage.app",
+messagingSenderId: "1050478968505",
+appId: "1:1050478968505:web:34cd7a166a65771bc8e568"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -25,22 +25,22 @@ const ADMIN_PASSWORD = "Mchukwa@123";
 
 function loadProducts(){
 
-  db.collection("products").onSnapshot(snapshot=>{
+db.collection("products").onSnapshot(snapshot=>{
 
-    products = [];
+products = [];  
 
-    snapshot.forEach(doc=>{
-      products.push({
-        id: doc.id,
-        ...doc.data()
-      });
-    });
+snapshot.forEach(doc=>{  
+  products.push({  
+    id: doc.id,  
+    ...doc.data()  
+  });  
+});  
 
-    filteredProducts = products;
+filteredProducts = products;  
 
-    renderProducts(filteredProducts);
+renderProducts(filteredProducts);
 
-  });
+});
 
 }
 
@@ -48,16 +48,16 @@ function loadProducts(){
 
 function searchProducts(){
 
-  let value = document
-    .getElementById("searchInput")
-    .value
-    .toLowerCase();
+let value = document
+.getElementById("searchInput")
+.value
+.toLowerCase();
 
-  filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(value)
-  );
+filteredProducts = products.filter(p =>
+p.name.toLowerCase().includes(value)
+);
 
-  renderProducts(filteredProducts);
+renderProducts(filteredProducts);
 
 }
 
@@ -65,45 +65,44 @@ function searchProducts(){
 
 function renderProducts(list){
 
-  let box = document.getElementById("productList");
+let box = document.getElementById("productList");
 
-  if(!box) return;
+if(!box) return;
 
-  box.innerHTML = "";
+box.innerHTML = "";
 
-  list.forEach(p=>{
+list.forEach(p=>{
 
-    box.innerHTML += `
+box.innerHTML += `  
 
-    <div class="card">
+<div class="card">  
 
-      <img src="${p.image}" alt="${p.name}">
+  <img src="${p.image}" alt="${p.name}">  
 
-      <h3>${p.name}</h3>
+  <h3>${p.name}</h3>  
 
-      <p>Tsh ${p.price}</p>
+  <p>Tsh ${p.price}</p>  
 
-      <button onclick="addToCart('${p.id}')">
-        🛒 Ongeza
-      </button>
+  <button onclick="addToCart('${p.id}')">  
+    🛒 weka bidhaa kikapuni </button>  
 
-      ${isAdmin ? `
+  ${isAdmin ? `  
 
-        <button onclick="editProduct('${p.id}')">
-          ✏ Edit
-        </button>
+    <button onclick="editProduct('${p.id}')">  
+      ✏ Edit  
+    </button>  
 
-        <button onclick="deleteProduct('${p.id}')">
-          🗑 Delete
-        </button>
+    <button onclick="deleteProduct('${p.id}')">  
+      🗑 Delete  
+    </button>  
 
-      ` : ""}
+  ` : ""}  
 
-    </div>
+</div>  
 
-    `;
+`;
 
-  });
+});
 
 }
 
@@ -111,21 +110,21 @@ function renderProducts(list){
 
 function addToCart(id){
 
-  let item = products.find(p=>p.id===id);
+let item = products.find(p=>p.id===id);
 
-  if(!item) return;
+if(!item) return;
 
-  let exist = cart.find(c=>c.id===id);
+let exist = cart.find(c=>c.id===id);
 
-  if(exist){
-    exist.qty++;
-  }else{
-    cart.push({...item, qty:1});
-  }
+if(exist){
+exist.qty++;
+}else{
+cart.push({...item, qty:1});
+}
 
-  updateCart();
+updateCart();
 
-  showToast("🛒 Bidhaa imeongezwa");
+showToast("🛒 item added");
 
 }
 
@@ -133,11 +132,11 @@ function addToCart(id){
 
 function removeFromCart(id){
 
-  cart = cart.filter(c=>c.id !== id);
+cart = cart.filter(c=>c.id !== id);
 
-  updateCart();
+updateCart();
 
-  renderCheckout();
+renderCheckout();
 
 }
 
@@ -145,13 +144,13 @@ function removeFromCart(id){
 
 function updateCart(){
 
-  let count = 0;
+let count = 0;
 
-  cart.forEach(c=>{
-    count += c.qty;
-  });
+cart.forEach(c=>{
+count += c.qty;
+});
 
-  document.getElementById("cartCount").innerText = count;
+document.getElementById("cartCount").innerText = count;
 
 }
 
@@ -159,11 +158,11 @@ function updateCart(){
 
 function openCheckout(){
 
-  renderCheckout();
+renderCheckout();
 
-  document
-    .getElementById("checkoutSheet")
-    .classList.add("active");
+document
+.getElementById("checkoutSheet")
+.classList.add("active");
 
 }
 
@@ -171,9 +170,9 @@ function openCheckout(){
 
 function closeCheckout(){
 
-  document
-    .getElementById("checkoutSheet")
-    .classList.remove("active");
+document
+.getElementById("checkoutSheet")
+.classList.remove("active");
 
 }
 
@@ -181,49 +180,49 @@ function closeCheckout(){
 
 function renderCheckout(){
 
-  let box = document.getElementById("checkoutList");
+let box = document.getElementById("checkoutList");
 
-  box.innerHTML = "";
+box.innerHTML = "";
 
-  let total = 0;
+let total = 0;
 
-  if(cart.length === 0){
+if(cart.length === 0){
 
-    box.innerHTML = `<p>Kikapu hakina bidhaa 🛒</p>`;
+box.innerHTML = `<p>Kikapu hakina bidhaa 🛒</p>`;  
 
-    document.getElementById("checkoutTotal").innerText = 0;
+document.getElementById("checkoutTotal").innerText = 0;  
 
-    return;
+return;
 
-  }
+}
 
-  cart.forEach(c=>{
+cart.forEach(c=>{
 
-    let subtotal = Number(c.price) * c.qty;
+let subtotal = Number(c.price) * c.qty;  
 
-    total += subtotal;
+total += subtotal;  
 
-    box.innerHTML += `
+box.innerHTML += `  
 
-    <div class="checkoutItem">
+<div class="checkoutItem">  
 
-      <div>
-        <h4>${c.name}</h4>
-        <p>${c.qty} x Tsh ${c.price}</p>
-      </div>
+  <div>  
+    <h4>${c.name}</h4>  
+    <p>${c.qty} x Tsh ${c.price}</p>  
+  </div>  
 
-      <div style="display:flex;align-items:center;gap:10px;">
-        <b>Tsh ${subtotal}</b>
-        <button class="removeBtn" onclick="removeFromCart('${c.id}')">✖</button>
-      </div>
+  <div style="display:flex;align-items:center;gap:10px;">  
+    <b>Tsh ${subtotal}</b>  
+    <button class="removeBtn" onclick="removeFromCart('${c.id}')">✖</button>  
+  </div>  
 
-    </div>
+</div>  
 
-    `;
+`;
 
-  });
+});
 
-  document.getElementById("checkoutTotal").innerText = total;
+document.getElementById("checkoutTotal").innerText = total;
 
 }
 
@@ -231,26 +230,26 @@ function renderCheckout(){
 
 function checkout(){
 
-  if(cart.length === 0){
-    alert("Kikapu hakina bidhaa");
-    return;
-  }
+if(cart.length === 0){
+alert("Kikapu hakina bidhaa");
+return;
+}
 
-  let name = document.getElementById("cName").value;
-  let location = document.getElementById("cLocation").value;
+let name = document.getElementById("cName").value;
+let location = document.getElementById("cLocation").value;
 
-  let total = 0;
+let total = 0;
 
-  let msg = "";
+let msg = "";
 
 msg += "CUSTOMER ORDER\n";
 msg += "--------------------------\n\n";
 
 cart.forEach(c=>{
-  let subtotal = Number(c.price) * c.qty;
-  total += subtotal;
+let subtotal = Number(c.price) * c.qty;
+total += subtotal;
 
-  msg += c.name + " x" + c.qty + " = Tsh " + subtotal + "\n";
+msg += c.name + " x" + c.qty + " = Tsh " + subtotal + "\n";
 });
 
 msg += "\n--------------------------\n";
@@ -270,21 +269,21 @@ window.open(url, "_blank");
 
 function loginAdmin(){
 
-  let pass = document.getElementById("adminPass").value.trim();
+let pass = document.getElementById("adminPass").value.trim();
 
-  if(pass === ADMIN_PASSWORD){
+if(pass === ADMIN_PASSWORD){
 
-    isAdmin = true;
+isAdmin = true;  
 
-    showToast("✅ Admin umeingia");
+showToast("✅ Admin umeingia");  
 
-    changeScreen("admin");
+changeScreen("admin");  
 
-    renderProducts(filteredProducts);
+renderProducts(filteredProducts);
 
-  }else{
-    alert("Password sio sahihi ❌");
-  }
+}else{
+alert("Password sio sahihi ❌");
+}
 
 }
 
@@ -292,35 +291,35 @@ function loginAdmin(){
 
 function saveProduct(){
 
-  let id = document.getElementById("editId").value;
+let id = document.getElementById("editId").value;
 
-  let name = document.getElementById("name").value;
-  let price = document.getElementById("price").value;
-  let image = document.getElementById("image").value;
+let name = document.getElementById("name").value;
+let price = document.getElementById("price").value;
+let image = document.getElementById("image").value;
 
-  if(name === "" || price === "" || image === ""){
-    alert("Jaza taarifa zote");
-    return;
-  }
+if(name === "" || price === "" || image === ""){
+alert("Jaza taarifa zote");
+return;
+}
 
-  let data = {name,price,image};
+let data = {name,price,image};
 
-  if(id){
+if(id){
 
-    db.collection("products").doc(id).update(data);
-    showToast("✏ Product updated");
+db.collection("products").doc(id).update(data);  
+showToast("✏ Product updated");
 
-  }else{
+}else{
 
-    db.collection("products").add(data);
-    showToast("➕ Product added");
+db.collection("products").add(data);  
+showToast("➕ Product added");
 
-  }
+}
 
-  document.getElementById("editId").value = "";
-  document.getElementById("name").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("image").value = "";
+document.getElementById("editId").value = "";
+document.getElementById("name").value = "";
+document.getElementById("price").value = "";
+document.getElementById("image").value = "";
 
 }
 
@@ -328,15 +327,15 @@ function saveProduct(){
 
 function editProduct(id){
 
-  let p = products.find(x=>x.id===id);
-  if(!p) return;
+let p = products.find(x=>x.id===id);
+if(!p) return;
 
-  document.getElementById("editId").value = p.id;
-  document.getElementById("name").value = p.name;
-  document.getElementById("price").value = p.price;
-  document.getElementById("image").value = p.image;
+document.getElementById("editId").value = p.id;
+document.getElementById("name").value = p.name;
+document.getElementById("price").value = p.price;
+document.getElementById("image").value = p.image;
 
-  changeScreen("admin");
+changeScreen("admin");
 
 }
 
@@ -344,11 +343,11 @@ function editProduct(id){
 
 function deleteProduct(id){
 
-  if(!isAdmin) return;
+if(!isAdmin) return;
 
-  db.collection("products").doc(id).delete();
+db.collection("products").doc(id).delete();
 
-  showToast("🗑 Product imefutwa");
+showToast("🗑 Product imefutwa");
 
 }
 
@@ -362,11 +361,11 @@ function goAdminLogin(){changeScreen("adminLogin")}
 
 function changeScreen(id){
 
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-  });
+document.querySelectorAll(".screen").forEach(s=>{
+s.classList.remove("active");
+});
 
-  document.getElementById(id).classList.add("active");
+document.getElementById(id).classList.add("active");
 
 }
 
@@ -374,22 +373,22 @@ function changeScreen(id){
 
 function showToast(text){
 
-  let t = document.createElement("div");
+let t = document.createElement("div");
 
-  t.innerText = text;
-  t.style.position="fixed";
-  t.style.bottom="100px";
-  t.style.left="50%";
-  t.style.transform="translateX(-50%)";
-  t.style.background="#ff5e99";
-  t.style.color="white";
-  t.style.padding="12px 18px";
-  t.style.borderRadius="20px";
-  t.style.zIndex="999999";
+t.innerText = text;
+t.style.position="fixed";
+t.style.bottom="100px";
+t.style.left="50%";
+t.style.transform="translateX(-50%)";
+t.style.background="#ff5e99";
+t.style.color="white";
+t.style.padding="12px 18px";
+t.style.borderRadius="20px";
+t.style.zIndex="999999";
 
-  document.body.appendChild(t);
+document.body.appendChild(t);
 
-  setTimeout(()=>t.remove(),2000);
+setTimeout(()=>t.remove(),2000);
 
 }
 
