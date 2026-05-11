@@ -1,185 +1,105 @@
-<!DOCTYPE html>
-<html lang="sw">
-<head>
-<meta charset="UTF-8">
-<title>JoH Cosmetics</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>  <html lang="sw">  
+<head>  
+<meta charset="UTF-8">  
+<title>JoH Cosmetics</title>  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  <link rel="stylesheet" href="style.css">  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>  </head>  <body>  <!-- ================= HOME ================= -->  <div id="home" class="screen active">    <div class="overlay">  <h1>JoH Cosmetics 💄</h1>  
 
-<link rel="stylesheet" href="style.css">
+<p>Vipodozi Original & Makeup</p>  
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<button onclick="showProducts()">  
+  INGIA SOKONI
+</button>
 
-</head>
+  </div>  </div>  <!-- ================= PRODUCTS ================= -->  <div id="products" class="screen">    <h2 class="title">  
+    Chimbo la Vipodozi Original💖 
+    Kwa bei Kitonga
+  </h2>    <!-- 🔍 SEARCH BAR (ADDED) -->  <input
+id="searchInput"
+type="text"
+placeholder="🔍 Tafuta bidhaa..."
+onkeyup="searchProducts()"
+class="searchBox"
 
-<body>
+> 
 
-<!-- ================= HOME ================= -->
+  <!-- FLOATING CART -->    <div id="cartBadge" onclick="openCheckout()">  🛒  
 
-<div id="home" class="screen active">
+<span id="cartCount">0</span>
 
-  <div class="overlay">
+  </div>    <!-- PRODUCTS LIST -->    <div id="productList"></div>  </div>  <!-- ================= CHECKOUT SHEET ================= -->  <div id="checkoutSheet" class="checkout-sheet">    <!-- HEADER -->    <div class="sheet-header">  <h3>🛒 Oda Yako</h3>  
 
-    <h1>JoH Cosmetics 💄</h1>
+<button class="closeBtn" onclick="closeCheckout()">  
+  ✖  
+</button>
 
-    <p>Premium Skincare & Makeup</p>
+  </div>    <!-- ORDER ITEMS -->    <div id="checkoutList"></div>    <!-- FOOTER -->    <div class="sheet-footer">  <h3>  
+  Total:  
+  Tsh <span id="checkoutTotal">0</span>  
+</h3>  
 
-    <button onclick="showProducts()">
-      VIEW PRODUCTS
-    </button>
+<input  
+  id="cName"  
+  type="text"  
+  placeholder="Jina lako"  
+>  
 
-  </div>
+<input  
+  id="cLocation"  
+  type="text"  
+  placeholder="Mahali ulipo"  
+>  
 
-</div>
+<button onclick="checkout()">  
+  Tuma Oda WhatsApp  
+</button>
 
-<!-- ================= PRODUCTS ================= -->
+  </div>  </div>  <!-- ================= ADMIN LOGIN ================= -->  <div id="adminLogin" class="screen">    <h2>Admin Login 🔐</h2>  <input
+id="adminPass"
+type="password"
+placeholder="Password"
 
-<div id="products" class="screen">
+> 
 
-  <h2 class="title">
-    Bidhaa Zetu 💖
-  </h2>
+  <button onclick="loginAdmin()">  
+    Login  
+  </button>  </div>  <!-- ================= ADMIN PANEL ================= -->  <div id="admin" class="screen">    <h2>Welcome Faridi 👑</h2>    <input type="hidden" id="editId">  <input
+id="name"
+type="text"
+placeholder="Jina la bidhaa"
 
-  <!-- 🔍 SEARCH BAR (ADDED) -->
-  <input
-    id="searchInput"
-    type="text"
-    placeholder="🔍 Tafuta bidhaa..."
-    onkeyup="searchProducts()"
-    class="searchBox"
-  >
+> 
 
-  <!-- FLOATING CART -->
-  <div id="cartBadge" onclick="openCheckout()">
+<input
+id="price"
+type="number"
+placeholder="Bei"
 
-    🛒
+> 
 
-    <span id="cartCount">0</span>
+<input
+id="image"
+type="text"
+placeholder="Image URL"
 
-  </div>
+> 
 
-  <!-- PRODUCTS LIST -->
-  <div id="productList"></div>
-
-</div>
-
-<!-- ================= CHECKOUT SHEET ================= -->
-
-<div id="checkoutSheet" class="checkout-sheet">
-
-  <!-- HEADER -->
-  <div class="sheet-header">
-
-    <h3>🛒 Oda Yako</h3>
-
-    <button class="closeBtn" onclick="closeCheckout()">
-      ✖
-    </button>
-
-  </div>
-
-  <!-- ORDER ITEMS -->
-  <div id="checkoutList"></div>
-
-  <!-- FOOTER -->
-  <div class="sheet-footer">
-
-    <h3>
-      Total:
-      Tsh <span id="checkoutTotal">0</span>
-    </h3>
-
-    <input
-      id="cName"
-      type="text"
-      placeholder="Jina lako"
-    >
-
-    <input
-      id="cLocation"
-      type="text"
-      placeholder="Mahali ulipo"
-    >
-
-    <button onclick="checkout()">
-      Tuma Oda WhatsApp
-    </button>
-
-  </div>
-
-</div>
-
-<!-- ================= ADMIN LOGIN ================= -->
-
-<div id="adminLogin" class="screen">
-
-  <h2>Admin Login 🔐</h2>
-
-  <input
-    id="adminPass"
-    type="password"
-    placeholder="Password"
-  >
-
-  <button onclick="loginAdmin()">
-    Login
-  </button>
-
-</div>
-
-<!-- ================= ADMIN PANEL ================= -->
-
-<div id="admin" class="screen">
-
-  <h2>Welcome Faridi 👑</h2>
-
-  <input type="hidden" id="editId">
-
-  <input
-    id="name"
-    type="text"
-    placeholder="Jina la bidhaa"
-  >
-
-  <input
-    id="price"
-    type="number"
-    placeholder="Bei"
-  >
-
-  <input
-    id="image"
-    type="text"
-    placeholder="Image URL"
-  >
-
-  <button onclick="saveProduct()">
-    Hifadhi Bidhaa
-  </button>
-
-</div>
-
-<!-- ================= NAVBAR ================= -->
-
-<div class="navbar">
-
-  <button onclick="showHome()">
-    Home
-  </button>
-
-  <button onclick="showProducts()">
-    Products
-  </button>
-
-  <button onclick="goAdminLogin()">
-    Admin
-  </button>
-
-</div>
-
-<!-- ================= SCRIPT ================= -->
-
-<script src="script.js"></script>
-
-</body>
+  <button onclick="saveProduct()">  
+    Hifadhi Bidhaa  
+  </button>  </div>  <!-- ================= NAVBAR ================= -->  <div class="navbar">    <button onclick="showHome()">  
+    Home  
+  </button>    <button onclick="showProducts()">  
+    Products  
+  </button>    <button onclick="goAdminLogin()">  
+    Admin  
+  </button>  </div>  <!-- ================= SCRIPT ================= -->  <script src="script.js"></script>  </body>  
 </html>
+
+<!-- ================= FLOATING WHATSAPP ================= -->
+
+<a
+href="https://wa.me/255677544659"
+target="_blank"
+class="floatingWhatsapp"
+>
+💬
+</a>
