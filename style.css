@@ -362,3 +362,376 @@ height:85%;
 }
 
 }
+
+/* ================= PREMIUM UPGRADE ================= */
+
+/* IMPORT FONT */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body{
+font-family:'Poppins',sans-serif;
+}
+
+/* HOME IMPROVEMENT */
+
+#home{
+
+background:
+linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.65)),
+url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80");
+
+background-size:cover;
+background-position:center;
+
+animation:bgMove 15s infinite alternate ease-in-out;
+}
+
+/* BACKGROUND ANIMATION */
+
+@keyframes bgMove{
+
+0%{
+background-size:100%;
+}
+
+100%{
+background-size:115%;
+}
+
+}
+
+/* OVERLAY */
+
+.overlay{
+
+background:rgba(255,255,255,0.05);
+
+backdrop-filter:blur(8px);
+
+padding:35px 25px;
+
+border-radius:30px;
+
+border:1px solid rgba(255,255,255,0.15);
+
+box-shadow:0 8px 30px rgba(0,0,0,0.3);
+
+animation:fadeUp 1.2s ease;
+}
+
+/* TEXT */
+
+.overlay h1{
+
+font-size:52px;
+
+font-weight:700;
+
+letter-spacing:1px;
+
+margin-bottom:10px;
+
+text-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+
+.overlay p{
+
+font-size:18px;
+
+font-weight:300;
+
+line-height:1.6;
+
+opacity:0.95;
+
+margin-bottom:25px;
+}
+
+/* BUTTON */
+
+.overlay button{
+
+background:linear-gradient(135deg,#ff5e99,#ff2f7d);
+
+padding:15px 32px;
+
+border-radius:35px;
+
+font-size:16px;
+
+font-weight:600;
+
+box-shadow:0 8px 25px rgba(255,94,153,0.45);
+
+transition:0.3s ease;
+}
+
+.overlay button:hover{
+
+transform:translateY(-3px) scale(1.03);
+
+box-shadow:0 12px 30px rgba(255,94,153,0.6);
+}
+
+/* NAVBAR */
+
+.navbar{
+
+backdrop-filter:blur(10px);
+
+background:rgba(255,255,255,0.92);
+
+border-top-left-radius:25px;
+
+border-top-right-radius:25px;
+
+padding:14px 10px;
+
+box-shadow:0 -4px 20px rgba(0,0,0,0.08);
+}
+
+/* NAV BUTTONS */
+
+.navbar button{
+
+background:linear-gradient(135deg,#ff5e99,#ff2f7d);
+
+padding:14px 25px;
+
+font-size:15px;
+
+border-radius:30px;
+
+font-weight:600;
+
+box-shadow:0 4px 15px rgba(255,94,153,0.25);
+}
+
+/* PRODUCT CARDS */
+
+.card{
+
+transition:0.3s ease;
+
+overflow:hidden;
+}
+
+.card:hover{
+
+transform:translateY(-6px);
+
+box-shadow:0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* IMAGE EFFECT */
+
+.card img{
+
+transition:0.4s ease;
+}
+
+.card:hover img{
+
+transform:scale(1.05);
+}
+
+/* SEARCH BOX */
+
+.searchBox{
+
+font-family:'Poppins',sans-serif;
+
+border:none;
+
+background:white;
+
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+/* CART */
+
+#cartBadge{
+
+background:linear-gradient(135deg,#ff5e99,#ff2f7d);
+
+animation:pulse 2s infinite;
+}
+
+/* PULSE */
+
+@keyframes pulse{
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.08);
+}
+
+100%{
+transform:scale(1);
+}
+
+}
+
+/* FADE ANIMATION */
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translate(-50%,-40%);
+}
+
+to{
+opacity:1;
+transform:translate(-50%,-50%);
+}
+
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.overlay h1{
+font-size:38px;
+}
+
+.overlay{
+padding:28px 20px;
+}
+
+.navbar button{
+padding:12px 18px;
+font-size:14px;
+}
+
+}
+
+/* ================= OFFER BAR ================= */
+
+.offerBar{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+padding:10px;
+
+background:linear-gradient(135deg,#ff5e99,#ff2f7d);
+
+color:white;
+
+font-size:13px;
+
+font-weight:600;
+
+text-align:center;
+
+z-index:999999;
+
+letter-spacing:0.5px;
+
+box-shadow:0 4px 15px rgba(0,0,0,0.15);
+
+animation:slideDown 1s ease;
+}
+
+/* ================= BODY TOP SPACE ================= */
+
+body{
+padding-top:42px;
+}
+
+/* ================= WHATSAPP BUTTON ================= */
+
+.floatingWhatsapp{
+
+position:fixed;
+
+bottom:95px;
+
+right:18px;
+
+width:62px;
+
+height:62px;
+
+border-radius:50%;
+
+background:#25D366;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:30px;
+
+text-decoration:none;
+
+color:white;
+
+z-index:99999;
+
+box-shadow:0 8px 25px rgba(37,211,102,0.4);
+
+animation:whatsappFloat 2s infinite;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes whatsappFloat{
+
+0%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-6px);
+}
+
+100%{
+transform:translateY(0px);
+}
+
+}
+
+@keyframes slideDown{
+
+from{
+transform:translateY(-100%);
+opacity:0;
+}
+
+to{
+transform:translateY(0);
+opacity:1;
+}
+
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+.offerBar{
+font-size:11px;
+padding:9px;
+}
+
+.floatingWhatsapp{
+width:58px;
+height:58px;
+font-size:28px;
+bottom:92px;
+}
+
+}
